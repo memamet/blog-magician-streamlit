@@ -15,6 +15,11 @@ openai_api_key = load_openai_api_key()
 if openai_api_key is None:
     openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
+# Add model selection in the sidebar
+model_name = st.sidebar.selectbox(
+    "Select OpenAI Model", ["gpt-4o-mini", "gpt-4o"], index=0
+)
+
 selected_question = None
 
 with st.form("generate_questions"):
@@ -25,7 +30,7 @@ with st.form("generate_questions"):
         st.warning("Please enter your OpenAI API key!", icon="⚠")
 
     if submitted and openai_api_key.startswith("sk-"):
-        questions = generate_questions(topic_text, openai_api_key)
+        questions = generate_questions(topic_text, openai_api_key, model_name)
         st.session_state["questions"] = questions
 
 if "questions" in st.session_state:
@@ -54,7 +59,7 @@ if "selected_question" in st.session_state:
         if first_draft:
             st.write("### Revising your draft...")
 
-            ai_revision = stream_response(first_draft, openai_api_key)
+            ai_revision = stream_response(first_draft, openai_api_key, model_name)
             st.session_state["revised_by_ai"] = ai_revision
 
             st.session_state["revised_by_human"] = st.session_state["revised_by_ai"]
@@ -74,10 +79,14 @@ if "selected_question" in st.session_state:
             if revised_by_human:
                 st.write("### Generating Title and Drawing Idea...")
 
-                blog_title = generate_title(revised_by_human, openai_api_key)
+                blog_title = generate_title(
+                    revised_by_human, openai_api_key, model_name
+                )
                 st.write("#### Suggested Title for the Blog Post:")
                 st.write(blog_title)
 
-                drawing_idea = generate_drawing_idea(revised_by_human, openai_api_key)
+                drawing_idea = generate_drawing_idea(
+                    revised_by_human, openai_api_key, model_name
+                )
                 st.write("#### Suggested Drawing Idea:")
                 st.write(drawing_idea)
