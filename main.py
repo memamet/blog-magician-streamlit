@@ -40,26 +40,44 @@ if "selected_question" in st.session_state:
 
 if "selected_question" in st.session_state:
     st.write("")
-    draft_text = st.text_area(
+    first_draft = st.text_area(
         "Write your first draft here! Relax.. This is only your first version ...",
         placeholder="Write your draft based on the selected question...",
         height=300,
+        key="first_draft",
     )
 
+    if "revised_by_ai" not in st.session_state:
+        st.session_state["revised_by_ai"] = first_draft
+
     if st.button("Put in the oven"):
-        if draft_text:
+        if first_draft:
             st.write("### Revising your draft...")
-            stream_response(draft_text, openai_api_key)
 
-    st.write("")
-    if st.button("Generate Title and Drawing Suggestion"):
-        if draft_text:
-            st.write("### Generating Title and Drawing Idea...")
+            ai_revision = stream_response(first_draft, openai_api_key)
+            st.session_state["revised_by_ai"] = ai_revision
 
-            blog_title = generate_title(draft_text, openai_api_key)
-            st.write("#### Suggested Title for the Blog Post:")
-            st.write(blog_title)
+            st.session_state["revised_by_human"] = st.session_state["revised_by_ai"]
 
-            drawing_idea = generate_drawing_idea(draft_text, openai_api_key)
-            st.write("#### Suggested Drawing Idea:")
-            st.write(drawing_idea)
+    if "revised_by_human" in st.session_state:
+        revised_by_human = st.text_area(
+            "Revised Draft (You can modify this)",
+            value=st.session_state["revised_by_human"],
+            height=300,
+            key="revised_by_human_input",
+        )
+        st.session_state["revised_by_human"] = revised_by_human
+
+    if "revised_by_human" in st.session_state:
+        if st.button("Generate Title and Drawing Suggestion"):
+            revised_by_human = st.session_state["revised_by_human"]
+            if revised_by_human:
+                st.write("### Generating Title and Drawing Idea...")
+
+                blog_title = generate_title(revised_by_human, openai_api_key)
+                st.write("#### Suggested Title for the Blog Post:")
+                st.write(blog_title)
+
+                drawing_idea = generate_drawing_idea(revised_by_human, openai_api_key)
+                st.write("#### Suggested Drawing Idea:")
+                st.write(drawing_idea)

@@ -3,9 +3,11 @@ from langchain.schema import HumanMessage
 from stream_handler import StreamHandler
 import streamlit as st
 
+model_name = "gpt-3.5-turbo"
+
 
 def generate_questions(topic, api_key):
-    llm = ChatOpenAI(model_name="gpt-4", openai_api_key=api_key)
+    llm = ChatOpenAI(model_name=model_name, openai_api_key=api_key)
     template = (
         "As an experienced blog technical writer, generate a list of 3 questions "
         "that could be used as a blog post title for the following topic: {topic}."
@@ -22,7 +24,7 @@ def stream_response(draft_text, api_key):
     stream_handler = StreamHandler(chat_box, display_method="write")
 
     llm = ChatOpenAI(
-        model_name="gpt-4",
+        model_name=model_name,
         openai_api_key=api_key,
         streaming=True,
         callbacks=[stream_handler],
@@ -37,14 +39,15 @@ def stream_response(draft_text, api_key):
         "- Provide additional punchlines (inline in the text in parentheses)"
     )
     prompt_query = template.format(draft_text=draft_text)
-
     message = HumanMessage(content=prompt_query)
+
     response = llm([message])
 
+    return response.content
 
-# Generate a blog post title based on the blog content
+
 def generate_title(draft_text, api_key):
-    llm = ChatOpenAI(model_name="gpt-4", openai_api_key=api_key)
+    llm = ChatOpenAI(model_name=model_name, openai_api_key=api_key)
     template = (
         "Generate a creative and engaging title for the following blog post:\n\n"
         "{draft_text}\n"
@@ -56,9 +59,8 @@ def generate_title(draft_text, api_key):
     return response.content
 
 
-# Generate a drawing idea that complements the blog post
 def generate_drawing_idea(draft_text, api_key):
-    llm = ChatOpenAI(model_name="gpt-4", openai_api_key=api_key)
+    llm = ChatOpenAI(model_name=model_name, openai_api_key=api_key)
     template = (
         "Suggest a creative drawing idea that could complement the following blog post. "
         "The drawing should visually represent the content or message of the blog:\n\n"
