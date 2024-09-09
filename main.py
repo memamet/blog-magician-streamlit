@@ -8,7 +8,7 @@ from llm_services import (
 )
 
 st.set_page_config(page_title="🧙‍♂️🔗 Blog Magician", page_icon="🧙‍♂️🔗")
-st.title("🧙‍♂️🔗 Don't be lazy, write a blog post yourself (but use AI)!")
+st.title("🧙‍♂️🔗 Don't be lazy, write a blog post yourself (but use AI as a copilot)!")
 
 openai_api_key = load_openai_api_key()
 

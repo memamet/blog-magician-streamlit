@@ -14,7 +14,7 @@ def generate_questions(topic, api_key, model_name):
     prompt_query = template.format(topic=topic)
 
     message = HumanMessage(content=prompt_query)
-    response = llm([message])
+    response = llm.invoke([message])
     return response.content.split("\n")
 
 
@@ -41,7 +41,7 @@ def stream_response(draft_text, api_key, model_name):
     prompt_query = template.format(draft_text=draft_text)
     message = HumanMessage(content=prompt_query)
 
-    response = llm([message])
+    response = llm.invoke([message])
 
     return response.content
 
@@ -55,7 +55,7 @@ def generate_title(draft_text, api_key, model_name):
     prompt_query = template.format(draft_text=draft_text)
 
     message = HumanMessage(content=prompt_query)
-    response = llm([message])
+    response = llm.invoke([message])
     return response.content
 
 
@@ -68,5 +68,5 @@ def generate_drawing_idea(draft_text, api_key, model_name):
     prompt_query = template.format(draft_text=draft_text)
 
     message = HumanMessage(content=prompt_query)
-    response = llm([message])
+    response = llm.invoke([message])
     return response.content
