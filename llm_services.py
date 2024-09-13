@@ -32,10 +32,11 @@ def stream_response(draft_text, api_key, model_name):
     template = (
         "Here is a blog draft:\n\n"
         "{draft_text}\n\n"
-        "Please revise it and suggest the following:\n"
-        "- Add examples (inline in the text in brackets)\n"
-        "- Point out where the text is unclear (inline in the text in brackets)\n"
-        "- Provide additional punchlines (inline in the text in parentheses)"
+        "Please revise it and give the following feedback:\n"
+        "- if examples are needed, tell which ones\n"
+        "- Point out where the text is unclear\n"
+        "- suggest additional punchlines"
+        "You will format your response as the original blog draft, but you will add the feedback in the text like this : 'sentence 1 [feedback] setence 2' "
         "Don't output an intro sentence, only the revised draft"
     )
     prompt_query = template.format(draft_text=draft_text)
